@@ -102,11 +102,13 @@ class TuringMachine :
 
         # While we are on a line that corresponds to a command, run the program
         while self.line_number >= 0 and self.line_number < len(self.program) :
-            if self._tracking :
-                print(self, "\n")
+            # if self._tracking :
+            #     print(self, "\n")
 
             code_tokens = self.program[self.line_number]
             self.run_command(code_tokens=code_tokens, outputfile=outputfile)
+
+        return str(self)
 
 
     def __str__(self):

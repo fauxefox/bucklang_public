@@ -7,24 +7,49 @@ import io
 
 def interactive_mode() :
     print("-"*40)
-    print("Entering interactive mode. After entering a starting string, run commands one at a time.")
+    print("Entering interactive mode for a single tape machine. After entering a starting string, run commands one at a time.")
     user_inp = input("Enter a starting string.\n")
 
     interactive_machine = TuringMachine(input_string=user_inp)
-    command = ""
+    tape = interactive_machine.tape
+    usr_command = ""
 
-    while not ("quit" in user_inp or "quit" in command):
+    while not ("quit" in user_inp or "quit" in usr_command):
         
         print()
         print(interactive_machine)
         
-        command = input("> ")
-        code_tokens = command.strip().split()
-        interactive_machine.run_command(code_tokens=code_tokens)
+        usr_command = input("> ").strip()
+        try :
+            if "if" in usr_command :
+                # if the usr inputs a standard transition command
+                code_tokens = usr_command.split(":")
+                code_tokens = {code_tokens[0].replace("if ", "").strip(), code_tokens[1]}
+
+                interactive_machine.run_command(code_tokens=code_tokens)
+            else :
+                # if the user inputs a tape command
+                code_tokens = usr_command.strip().split()
+                
+                if len(code_tokens) == 2 :
+                    if code_tokens == ["move", "left"] :
+                        tape.move_left()
+                    if code_tokens == ["move", "right"] :
+                        tape.move_right()
+                    if code_tokens[0] == "write" :
+                        tape.write_value(code_tokens[1])
+                elif len(code_tokens) == 3 :
+                    direction, multiple = code_tokens[1:]
+                    if direction == "left" :
+                        tape.move_left(multiple=int(multiple))
+                    if direction == "right" :
+                        tape.move_right(multiple=int(multiple))
+        except :
+            print("\nInvalid command.\n")
 
 def main(input_file = "", input_word = "") :
-    outputfilename = input_file + "_output.txt"
     try :
+        outputfilename = input_file + "_output.txt"
         with open(outputfilename, "w") as outputfile :
             print("Found", input_file)
             outputfile.write("Running " + input_file + "\n\n")
@@ -35,8 +60,9 @@ def main(input_file = "", input_word = "") :
         
         code_lines = read_code(input_file)
         automatic_machine = TuringMachine(input_string = input_word, program = code_lines, tracked=tracking)
-        automatic_machine.run(outputfile=outputfilename)
-
+        print(f"Input tape:\n{automatic_machine}")
+        result = automatic_machine.run(outputfile=outputfilename)
+        print(f"Output tape:\n{result}")
     except :
         interactive_mode()
         

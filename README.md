@@ -9,4 +9,5 @@ Run this in your terminal in the folder where you cloned it:
 ```
 python3 bucklang.py sample_bucklang.buck "111000"
 ```
+If you choose to let it track, it will write to an output file. Otherwise, it will just print the result of runnning the program.
 The first two are just running the python script. The last half tells it which bucklang script to run it on, and then what the input string should be.

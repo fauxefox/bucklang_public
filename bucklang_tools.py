@@ -24,7 +24,7 @@ def read_code(filename) :
 
                 code_lines.append(code_line)
 
-    print(code_lines)
+    # print(code_lines)
     return code_lines
 
 
