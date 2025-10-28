@@ -10,8 +10,10 @@ class TuringMachine :
     MOVE = "move"
     WRITE = "write"
     GOTO = "goto"
+    ERASE = "erase"
     STATE = "state"
     TOPSTATE = "__top"
+    HALT = "halt"
 
     def __init__(self, input_string = "", program=["halt"], tracked = False):
         """
@@ -39,17 +41,24 @@ class TuringMachine :
         # In this encoding of a Turing machine, states are the same as "line numbers".
         # This creates a dictionary of what line numbers the states are at. We also 
         # use the state name __top to move the program to the first line.
-        self.states = {TuringMachine.TOPSTATE : 0}
+        self.states = {TuringMachine.TOPSTATE : -1}
         for line_index in range(len(program)) :
             line = program[line_index]
-            if len(line) >= 2 and line[0] == TuringMachine.STATE and not (line[1] in self.states.keys()) :
-                self.states[line[1]] = line_index
+            if (
+                len(line) >= 2 
+                and line[0] == TuringMachine.STATE 
+            ) :
+                statename = line[1]
+                self.states[statename] = line_index
 
-        # Records the current state of the program.
+        # Make sure they set a top state!
+        assert self.states[TuringMachine.TOPSTATE] > -1
+
+        # Records the current state of the program
         self.current_state = TuringMachine.TOPSTATE
         
         # Start at the top of the program and scan downwards.
-        self.line_number = 0
+        self.line_number = self.states[self.current_state]
 
     def run_command(self, code_tokens, outputfile=None) :
         """
@@ -60,16 +69,15 @@ class TuringMachine :
         if type(code_tokens) == list :
             statename = code_tokens[1]
             self.current_state = statename
-            
-            self.line_number += 1
 
         # If the code_tokes are a dictionary, then they correspond to a line of the program
         elif type(code_tokens) == dict :
 
             # Get the symbol under the tape head
-            reading = self.tape.read_value()
-
-            # If currently reading the conditional guard, run proceeding program.
+            reading = string_clean(self.tape.read_value())
+            
+            # If currently reading the conditional guard, run proceeding program.     
+            # input(reading + " sat condition " + ", ".join(code_tokens.keys()) + str(reading in code_tokens.keys()))  
             if reading in code_tokens.keys() :
 
                 # Gather the "laundry list" of tape machine commands and run in order
@@ -97,6 +105,22 @@ class TuringMachine :
                     except :
                         aux_argument = None
 
+                    ##########
+                    ##### THIS IS AN EXCELLENT PLACE TO DEBUG
+                    debugging = False
+                    if debugging :
+                        input(" ".join(
+                            [
+                                "state " + self.current_state, 
+                                str(code_tokens.keys()),
+                                str(reading),
+                                str(command), 
+                                str(argument), 
+                                str(aux_argument)
+                            ]
+                            )
+                        )
+                    ###########################################
 
                     # Now go through the possible commands one at a time
                     if command == TuringMachine.MOVE and argument[0] == "l" :
@@ -118,22 +142,30 @@ class TuringMachine :
                     elif command == TuringMachine.WRITE :
                         self.tape.write_value(str(argument))
 
+                    elif command == TuringMachine.ERASE :
+                        self.tape.write_value(Tape.BLANK)
+
                     elif command == TuringMachine.GOTO and argument in self.states.keys() :
                         self.line_number = self.states[argument]
 
                         # In this case, we are changing states, so we do not increment the line number
                         return "transition to state " + str(argument)
 
-                    else : 
+                    elif command == TuringMachine.HALT : 
                         return "eop"
-
 
                     # if there is a specified output file and we are tracking, write to it
                     if outputfile != None and self._tracking :
                         with open(outputfile, "a") as output :
                             
-                            output.write(f"{self}\n{item}\n\n")
+                            output.write(
+                                str(self) \
+                                    + "\n (" + str(self.current_state) 
+                                    + ") " + str(item) + " \n"
+                                )
         
+        # input(" ".join([self.current_state, self.tape.read_value()]))
+
         if (
             (len(self.program) <= self.line_number + 1)
             or (type(self.program[self.line_number + 1]) == list)
@@ -150,10 +182,6 @@ class TuringMachine :
 
         # While we are on a line that corresponds to a command, run the program
         while self.line_number >= 0 and self.line_number < len(self.program) :
-            
-            print(self)    # for debugging
-            input(self.program[self.line_number])    # for debugging
-
             code_tokens = self.program[self.line_number]
             result = self.run_command(code_tokens=code_tokens, outputfile=outputfile)
 

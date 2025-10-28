@@ -5,8 +5,15 @@
 # the one that was presented in CSCI 341 Theory of Computation
 # at Bucknell University in the Fall of 2025.
 
-# ------ How to write programs
+# ------ How to write programs --------
 # Every program needs to be within the scope of a state.
+# The first state you need to define is the __top state 
+
+state __top
+if _ :goto scanright
+if 0 :goto scanright
+if 1 :goto scanright
+
 # You can create a state by writing "state statename".
 # In the example below, the "statename" is "scanright.
 
@@ -16,7 +23,7 @@ state scanright
 
 # Every line of code is of the form you see below:
 
-if _ :move left.halt
+if _ :move left.goto halt
 
 # It starts with a condition that guards the behaviour of the tape
 # head, in the sense that the code to its right only executes if the 
@@ -38,3 +45,5 @@ if 1 : move right.goto scanright
 
 # Note that we can use have multiple states going. To transition between
 # them you need to use "goto otherstatename".
+
+state halt
