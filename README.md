@@ -7,9 +7,11 @@ It is based on the "WB" language taught as part of [Stanford's CS 203 Mathematic
 First, clone the repository.
 Run this in your terminal in the folder where you cloned it:
 ```
-python3 bucklang.py sample_bucklang.buck "111000"
+python3 bucklang.py "examples/tutorial.buck" "111000"
 ```
-The first two are just running the python script. The last half tells it which bucklang script to run it on, and then what the input string should be.
+You will need to have [Python](python.org) installed, of course.
+The first two arguments in the command above run the python script `bucklang.py`, which is the interpreter. The second argument tells the interpreter where the source code of your bucklang script is, and the last argument gives your bucklang script a starting tape.
+
 If you choose to let it track, it will write to an output file. Otherwise, it will just print the result of runnning the program.
 
 ### Interactive Mode
