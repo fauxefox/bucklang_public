@@ -1,0 +1,30 @@
+Running .\sample_bucklang.buck
+
+        V                
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+move right
+
+            V            
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+move right
+
+                V        
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+move right
+
+                    V    
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+move right
+
+                        V
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+move right
+
+                    V    
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+move left
+
+                    V    
+... 1 | 0 | 1 | 1 | 0 | _ |  ...
+halt
+

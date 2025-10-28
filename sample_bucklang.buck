@@ -1,0 +1,11 @@
+# This is a bucklang file, which programs a Tape Head.
+
+state scanright
+if _ :move left.goto halt
+if 0 :move right.goto scanright
+if 1 :move right.goto scanright
+
+state halt
+if _ :halt
+if 0 :halt
+if 1 :halt
