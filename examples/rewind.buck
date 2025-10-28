@@ -1,4 +1,5 @@
 # Computes the rewind function.
+
 state rewind
 if _ :halt
 if 0 :move left.goto rewind
