@@ -1,0 +1,40 @@
+# This is a bucklang file, which allows you to write 
+# recursive programs for manipulating a tw-way tape head. 
+# In other words, Buck is a scripting language for specifying
+# Turing machines! The Turin machine model we are using is
+# the one that was presented in CSCI 341 Theory of Computation
+# at Bucknell University in the Fall of 2025.
+
+# ------ How to write programs
+# Every program needs to be within the scope of a state.
+# You can create a state by writing "state statename".
+# In the example below, the "statename" is "scanright.
+
+state scanright
+
+# Now everything below this is where the scope of the state resides.
+
+# Every line of code is of the form you see below:
+
+if _ :move left.halt
+
+# It starts with a condition that guards the behaviour of the tape
+# head, in the sense that the code to its right only executes if the 
+# symbol immediately to the left of the : is right under the tape head.
+
+# Part of the point here is that we can "recurse", in this case we
+# are "calling" the original state scanright. By "calling" I mean 
+# "going to", denoted by "goto". This sens the execution up to line 13.
+
+if 0 : move right.goto scanright
+if 1 : move right.goto scanright
+
+# In Bucklang, every potential input symbol should have a corresponding 
+# conditional guard for every state, to maintain the expected behaviour 
+# of the machine. If we want a transition to halt the program, we can use 
+# the keyword "halt". You can see this on line 13
+
+# ------ This is where the scope of the state scanright ends.
+
+# Note that we can use have multiple states going. To transition between
+# them you need to use "goto otherstatename".
