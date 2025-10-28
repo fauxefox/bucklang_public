@@ -56,6 +56,7 @@ class TuringMachine :
         Runs a single line of the program.
         """
         
+        input(code_tokens)    # for debugging
         
         # If the code_tokens are a list, then they must be the keyword state and a state name
         if type(code_tokens) == list :
@@ -125,6 +126,8 @@ class TuringMachine :
                         # In this case, we are changing states, so we do not increment the line number
                         return "transition to state " + str(argument)
 
+                    else : 
+                        return "eop"
 
 
                     # if there is a specified output file and we are tracking, write to it
@@ -132,6 +135,14 @@ class TuringMachine :
                         with open(outputfile, "a") as output :
                             
                             output.write(f"{self}\n{item}\n\n")
+        
+        if (
+            (len(self.program) <= self.line_number + 1)
+            or (type(self.program[self.line_number + 1]) == list)
+        ) :
+            return "eop"
+        else :        
+            self.line_number += 1
     
             
     def run(self, outputfile = None) :
@@ -145,6 +156,10 @@ class TuringMachine :
             #     print(self, "\n")
 
             code_tokens = self.program[self.line_number]
+            result = self.run_command(code_tokens=code_tokens, outputfile=outputfile)
+
+            if result == "eop" :
+                return str(self)
 
         return str(self)
 
