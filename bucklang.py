@@ -1,13 +1,27 @@
+"""
+Source file for the BuckLang interpreter. Use the command 
+
+python bucklang.py
+
+to run in interactive mode, or 
+
+python bucklang.py file.buck inputstring
+
+to run the interpreter on the BuckLang file file.buck with
+inputstring the initial string written to the tape.
+"""
+
 from tapemachine import Tape
 from turingmachine import TuringMachine
 from bucklang_tools import *
 import sys
-import io
-
 
 def interactive_mode() :
-    print("-"*40)
-    print("Entering interactive mode for a single tape machine. After entering a starting string, run commands one at a time.")
+    """
+    In this mode, the user can interact with a simple tape machine to
+    see the output. Only basic tape head commands can be run.
+    """
+
     user_inp = input("Enter a starting string.\n")
 
     interactive_machine = TuringMachine(input_string=user_inp)
@@ -48,25 +62,47 @@ def interactive_mode() :
             print("\nInvalid command.\n")
 
 def main(input_file = "", input_word = "") :
+    """
+    If there is an input buck file, interpret the buck file as a 
+    Turing machine and run it from state __top on the input word.
+
+    If there is no input buck file, run in interactive mode.
+    """
+
+    # Try to find the given input buck file
     try :
         outputfilename = input_file + "_output.txt"
         with open(outputfilename, "w") as outputfile :
             print("Found", input_file)
             outputfile.write("Running " + input_file + "\n\n")
 
-
+        # ask the user if they would likt the program to track every move of the machine.
         usr_inp = input("Would you like to track the machine's progress? (y/n)\n").strip().lower()
         tracking = (usr_inp[0] == "y")
         
+        # Create: 
+        # - the index of program lines (called code_lines)
+        # - the Turing machine (automatic _machine)
+        # Then run the turing machine on the code_lines.
         code_lines = read_code(input_file)
         automatic_machine = TuringMachine(input_string = input_word, program = code_lines, tracked=tracking)
+        
         print(f"Input tape:\n{automatic_machine}")
+        
         result = automatic_machine.run(outputfile=outputfilename)
+        
         print(f"Output tape:\n{result}")
+
     except :
+        # Something either went wrong with loading the file or no further arguments were given.
+        print("-"*40)
+        print("Entering interactive mode for a single tape machine. After entering a starting string, run basic tape commands one at a time.")
+
         interactive_mode()
         
-
+#####################
+# Initiates Runtime #
+#####################
 
 if __name__ == "__main__" :
     # Collect command line arguments
