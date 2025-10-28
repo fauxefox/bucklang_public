@@ -31,7 +31,7 @@ class TuringMachine :
             self.tape.write_value(c)
             self.tape.move_right()
 
-        self.tape.move_left(multiple=len(input_string) - 1)
+        self.tape.move_left(multiple=len(input_string))
 
         # Set up the program
         self.program = program
@@ -55,8 +55,6 @@ class TuringMachine :
         """
         Runs a single line of the program.
         """
-        
-        input(code_tokens)    # for debugging
         
         # If the code_tokens are a list, then they must be the keyword state and a state name
         if type(code_tokens) == list :
@@ -152,8 +150,9 @@ class TuringMachine :
 
         # While we are on a line that corresponds to a command, run the program
         while self.line_number >= 0 and self.line_number < len(self.program) :
-            # if self._tracking :
-            #     print(self, "\n")
+            
+            print(self)    # for debugging
+            input(self.program[self.line_number])    # for debugging
 
             code_tokens = self.program[self.line_number]
             result = self.run_command(code_tokens=code_tokens, outputfile=outputfile)

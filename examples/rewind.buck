@@ -1,11 +1,10 @@
 # Computes the rewind function.
 
+# The top lines can be used to setup the machine
+if 0 :move right.move right.move right.move right.goto rewind
+if 1 :move right.move right.move right.move right.goto rewind
+
 state rewind
-if _ :halt
+if _ :move right.halt
 if 0 :move left.goto rewind
 if 1 :move left.goto rewind
-
-
-state setup
-if _ :move right.move right.move right.move right.goto rewind
-
