@@ -1,7 +1,6 @@
-import sys
-import io
+import string
 
-def read_code(filename) :
+def read_code(filename : str) :
     """
     Given a filename, this reads in the code line by line and creates a list of commands.
     """
@@ -28,4 +27,18 @@ def read_code(filename) :
     # print(code_lines)
     return code_lines
 
+def string_clean(unclean : str) :
+    """
+    Totally cleans a string representation of something.
+    """
+    for c in string.whitespace :
+        unclean = unclean.replace(c, "")
+    
+    return unclean
 
+
+
+# for debugging
+if __name__ == "__main__":
+    s = "  h a l l \n \t "
+    print(string_clean(s))
