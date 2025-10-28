@@ -31,7 +31,7 @@ class TuringMachine :
             self.tape.write_value(c)
             self.tape.move_right()
 
-        self.tape.move_left(multiple=len(input_string))
+        self.tape.move_left(multiple=len(input_string) - 1)
 
         # Set up the program
         self.program = program
@@ -56,64 +56,83 @@ class TuringMachine :
         Runs a single line of the program.
         """
         
-        # input(code_tokens)    # for debugging
         
         # If the code_tokens are a list, then they must be the keyword state and a state name
         if type(code_tokens) == list :
             statename = code_tokens[1]
             self.current_state = statename
+            
+            self.line_number += 1
 
         # If the code_tokes are a dictionary, then they correspond to a line of the program
-        if type(code_tokens) == dict :
+        elif type(code_tokens) == dict :
 
             # Get the symbol under the tape head
             reading = self.tape.read_value()
 
+            # If currently reading the conditional guard, run proceeding program.
             if reading in code_tokens.keys() :
+
+                # Gather the "laundry list" of tape machine commands and run in order
                 laundry_list = code_tokens[reading]
 
                 for item in laundry_list :
+                    # each item in the laundry list is a string of the form
+                    #   "command argument (aux argument)"
+                    item : str          
+
                     command_tokens = item.split()
                     command = command_tokens[0]
                     
+
+                    # Try to find an argument (not every command has one)
                     try :
                         argument = command_tokens[1]
                     except :
                         argument = None
                     
+
+                    # Try to find a second (aux) argument
                     try :
                         aux_argument = command_tokens[2]
                     except :
                         aux_argument = None
 
+
+                    # Now go through the possible commands one at a time
                     if command == TuringMachine.MOVE and argument[0] == "l" :
+
                         if aux_argument != None :
-                            self.tape.move_left(multiple=aux_argument)
+                            # Here, move got a "multiples" argument
+                            self.tape.move_left(multiple = aux_argument)
                         else :
                             self.tape.move_left()
 
-                    if command == TuringMachine.MOVE and argument[0] == "r" :
+                    elif command == TuringMachine.MOVE and argument[0] == "r" :
+                        
                         if aux_argument != None :
+                            # Here, move got a "multiples" argument
                             self.tape.move_right(multiple=aux_argument)
                         else :
                             self.tape.move_right()
 
-                    if command == TuringMachine.WRITE :
+                    elif command == TuringMachine.WRITE :
                         self.tape.write_value(str(argument))
 
-                    if command == TuringMachine.GOTO and argument in self.states.keys() :
+                    elif command == TuringMachine.GOTO and argument in self.states.keys() :
                         self.line_number = self.states[argument]
-                        return
-                    
 
-                    # if there is a specified output file, write to it
+                        # In this case, we are changing states, so we do not increment the line number
+                        return "transition to state " + str(argument)
+
+
+
+                    # if there is a specified output file and we are tracking, write to it
                     if outputfile != None and self._tracking :
                         with open(outputfile, "a") as output :
                             
                             output.write(f"{self}\n{item}\n\n")
     
-        self.line_number += 1
-        return
             
     def run(self, outputfile = None) :
         """
@@ -126,7 +145,6 @@ class TuringMachine :
             #     print(self, "\n")
 
             code_tokens = self.program[self.line_number]
-            self.run_command(code_tokens=code_tokens, outputfile=outputfile)
 
         return str(self)
 
