@@ -3,9 +3,9 @@ class Tape :
     A class that denotes a tape machine.
 
     Attributes:
-    # 
+    #
         _tape_list          The data stored on the tape.
-        _tape_head          The index at which the tape head appears in tape_list. 
+        _tape_head          The index at which the tape head appears in tape_list.
                             Informally, the position of the tape head.
         _tape_length        Current amount of tape rendered. _tape_list expands when trying to move the tape head out of bounds.
     """
@@ -38,41 +38,41 @@ class Tape :
 
         if direction == Tape.LEFT :
             self._tape_list = [Tape.BLANK] + self._tape_list
-    
+
         # Increase width of used tape by 1
         self._tape_length += 1
 
     def move_right(self, multiple = 1, enroute = False) :
         """
-        Move the tape head to the right. 
+        Move the tape head to the right.
         If multiple steps are indicated, "enroute" might be used to prevent every step being printed/written to the output file.
         """
         for _ in range(multiple) :
             if self._tape_head >= self._tape_length - 1 :
                 self._extend_tape(Tape.RIGHT)
-            
+
             # move the tape head to the right
             self._tape_head += 1
 
     def move_left(self, multiple = 1, enroute = False) :
         """
-        Move the tape head to the left. 
+        Move the tape head to the left.
         If multiple steps are indicated, "enroute" might be used to prevent every step being printed/written to the output file.
         """
         for _ in range(multiple) :
             if self._tape_head == 0 :
                 # just expanding to the left simulates moving the tape head left
                 self._extend_tape(Tape.LEFT)
-            else : 
+            else :
                 # If there is room to the left, move the tape head left
                 self._tape_head -= 1
-            
+
     def read_value(self) :
         """
         Returns the symbol under the tape head.
         """
         return self._tape_list[self._tape_head]
-    
+
     def write_value(self, value) :
         """
         Writes the symbol `value` to the tape under the tape head.
@@ -90,7 +90,7 @@ class Tape :
         Get position of the tape head in the list representation.
         """
         return self._tape_head
-    
+
     def move_to(self, line) :
         """
         Cheater function! Moves the head to a particular index on the list representation.
@@ -106,17 +106,17 @@ class Tape :
         Returns a string representation of the tape.
         """
         str_rep = "... "
-        str_hed = "    " 
+        str_hed = "    "
         for line in range(self._tape_length) :
             value = self._tape_list[line]
             value_len = len(value)
 
-            str_rep += f"{value} | "
+            str_rep += value + " | "
 
 
             if self._tape_head == line :
-                str_hed += f"V{" "*(value_len - 1)}"
+                str_hed += "V" + (" " * (value_len - 1))
             else :
-                str_hed += f"{" "*(value_len + 3)}"
-        
-        return f"{str_hed}\n{str_rep} ..."
+                str_hed += " " * (value_len + 3)
+
+        return str_hed + "\n" + str_rep + " ..."
