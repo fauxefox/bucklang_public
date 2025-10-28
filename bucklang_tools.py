@@ -18,6 +18,7 @@ def read_code(filename) :
                 if ":" in new_line :
                     condition, commands = new_line.split(":")
                     condition = condition.replace("if ", "").replace(" ", "")
+                    commands.lstrip()
                     code_line = {condition : commands.split(".")}
                 else : 
                     code_line = new_line.split()

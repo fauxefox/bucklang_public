@@ -1,0 +1,10 @@
+# Computes the rewind function.
+state rewind
+if _ :halt
+if 0 :move left.goto rewind
+if 1 :move left.goto rewind
+
+
+state setup
+if _ :move right.move right.move right.move right.goto rewind
+

@@ -39,15 +39,13 @@ class TuringMachine :
 
     def run_command(self, code_tokens, outputfile=None) :
         tape = self.tape
-
-
+        # print(code_tokens)
         if type(code_tokens) == list :
             statename = code_tokens[1]
             self.line_number = self.states[statename]
         
         if type(code_tokens) == dict :
             reading = self.tape.read_value()
-            # input(code_tokens)
 
             if reading in code_tokens.keys() :
                 laundry_list = code_tokens[reading]
