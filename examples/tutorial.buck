@@ -31,7 +31,7 @@ if _ :move left.goto halt
 
 # Part of the point here is that we can "recurse", in this case we
 # are "calling" the original state scanright. By "calling" I mean 
-# "going to", denoted by "goto". This sens the execution up to line 13.
+# "going to", denoted by "goto". This sends the execution up to line 13.
 
 if 0 : move right.goto scanright
 if 1 : move right.goto scanright
@@ -48,3 +48,4 @@ if 1 : move right.goto scanright
 
 
 state halt
+
