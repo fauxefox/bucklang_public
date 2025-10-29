@@ -1,7 +1,7 @@
 # This is a bucklang file, which allows you to write 
 # recursive programs for manipulating a tw-way tape head. 
 # In other words, Buck is a scripting language for specifying
-# Turing machines! The Turin machine model we are using is
+# Turing machines! The Turing machine model we are using is
 # the one that was presented in CSCI 341 Theory of Computation
 # at Bucknell University in the Fall of 2025.
 
@@ -45,5 +45,6 @@ if 1 : move right.goto scanright
 
 # Note that we can use have multiple states going. To transition between
 # them you need to use "goto otherstatename".
+
 
 state halt
