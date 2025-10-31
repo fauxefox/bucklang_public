@@ -1,0 +1,38 @@
+# Pseudocode
+# If the only digit is 0, then halt.
+# If the only digit is 1, then flip it to a 0 and halt.
+# Move to the end of the string of 0s and 1s.
+# If the last digit is 1, flip it to a 0 and halt. 
+# If the last digit is 0, then we change it to a 1 and move left.
+# If there are no digits to the left and the current digit is 1, erase the 1 and halt.
+# Otherwise, return to Step 4.
+
+state __top
+if 0 : move right.goto check_only_0
+if 1 : move right.goto check_only_1
+
+state check_only_0
+if _ : goto halt
+if 0 : goto move_to_end
+if 1 : goto move_to_end
+
+state check_only_1
+if _ : move left.write 0.goto halt
+if 0 : goto move_to_end
+if 1 : goto move_to_end
+
+state move_to_end
+if _ : move left.goto last_digit
+if 0 : move right.goto move_to_end
+if 1 : move right.goto move_to_end
+
+state last_digit
+if _ : move right.erase.goto halt
+if 0 : write 1.move left.goto last_digit
+if 1 : write 0.move left.goto is_final_one
+
+state is_final_one
+if _ : move right.erase.goto halt
+
+state halt
+
