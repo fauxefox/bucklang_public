@@ -111,9 +111,12 @@ def main(input_file = "", input_word = "", debugging = False) :
                 
         
         # Run the machine
-        print(f"Input tape:\n{automatic_machine}")
+        # print(f"Input tape:\n{automatic_machine}")
+        print("\nInput:", input_word)
         result = automatic_machine.run(outputfile=outputfilename)
-        print(f"Output tape:\n{result}")
+        output_string = automatic_machine.output()
+        # print(f"End tape:\n{result}")
+        print("Output:", output_string, "\n")
 
 
     except :

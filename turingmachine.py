@@ -194,3 +194,11 @@ class TuringMachine :
     def __str__(self):
         return str(self.tape)
     
+    def output(self) -> str : 
+        output_str = ""
+        for cell in self.tape._tape_list : 
+            if str(cell) != "_" : 
+                output_str += str(cell)
+        
+        return output_str
+    

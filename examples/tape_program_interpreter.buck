@@ -1,0 +1,290 @@
+# ---
+# Tape Program Interpreter
+#
+# This BuckLang program takes in a one-way
+# tape program and a starting string and 
+# and runs the tape program on the string,
+# treated as a "virtual tape". To see how
+# it behaves, try running 
+#   python3 bucklang.py "solutions/tape_program_interpreter.buck" "move%right*001"
+# For a more sophisticated program, you can try "write%0.move%right.write%0.move%right.write%0*111"
+# ----
+
+# STATE: TOP
+state __top 
+if m : write m'.move right.goto setup
+if w : write w'.move right.goto setup
+
+# STATE: SETUP 
+# - Initializes the "position" marker on the virtual tape
+state setup 
+    if * : move right.goto write_init_prime
+
+    # standard scan right
+    if . : move right.goto setup
+    if m : move right.goto setup
+    if m : move right.goto setup
+    if o : move right.goto setup
+    if v : move right.goto setup
+    if e : move right.goto setup
+    if % : move right.goto setup
+    if r : move right.goto setup
+    if i : move right.goto setup
+    if g : move right.goto setup
+    if h : move right.goto setup
+    if t : move right.goto setup
+    if l : move right.goto setup
+    if e : move right.goto setup
+    if f : move right.goto setup
+    if t : move right.goto setup
+    if w : move right.goto setup
+    if - : move right.goto setup
+    if 0 : move right.goto setup
+    if 1 : move right.goto setup
+
+state write_init_prime
+    if _ : write _'.move left.goto rewind
+    if 0 : write 0'.move_left.goto rewind
+    if 1 : write 1'.move left.goto rewind
+
+###########################################
+# The next three states are general 
+# purpose virtual program states
+###########################################
+
+# STATE: HALT
+state halt
+
+# STATE: REWIND
+# Finds the spot in the virtual tape program that is currently being read from
+state rewind 
+    if _ : move right.goto halt
+    if m' : write m.goto determine_command
+    if w' : write w.goto determine_command
+
+    # These next few we arrive at when we've just run a command and we want the virtual program to progress
+    if l' : write l.move right.goto next_command
+    if r' : write r.move right.goto next_command
+    if d : goto next_command
+
+    # standard scan left
+    if . : move left.goto rewind
+    if % : move left.goto rewind
+    if * : move left.goto rewind
+    if m : move left.goto rewind
+    if o : move left.goto rewind
+    if v : move left.goto rewind
+    if e : move left.goto rewind
+    if r : move left.goto rewind
+    if i : move left.goto rewind
+    if g : move left.goto rewind
+    if h : move left.goto rewind
+    if t : move left.goto rewind
+    if l : move left.goto rewind
+    if e : move left.goto rewind
+    if f : move left.goto rewind
+    if t : move left.goto rewind
+    if w : move left.goto rewind
+    if - : move left.goto rewind
+    if 0 : move left.goto rewind
+    if 1 : move left.goto rewind
+    if -' : move left.goto rewind
+    if 0' : move left.goto rewind
+    if 1' : move left.goto rewind
+
+# STATE: DETERMINE CURRENT COMMAND
+state determine_command
+    if m : move right.move right.move right.move right.move right.goto virt_move
+    if w : move right.move right.move right.move right.move right.move right.goto virt_write
+
+# STATE: GO TO NEXT COMMAND
+state next_command
+    if * : goto clear_for_output
+    if . : move right.goto determine_command
+
+    # standard scan right
+    if d : move right.goto next_command
+    if m : move right.goto next_command
+    if o : move right.goto next_command
+    if v : move right.goto next_command
+    if e : move right.goto next_command
+    if % : move right.goto next_command
+    if r : move right.goto next_command
+    if i : move right.goto next_command
+    if g : move right.goto next_command
+    if h : move right.goto next_command
+    if t : move right.goto next_command
+    if l : move right.goto next_command
+    if e : move right.goto next_command
+    if f : move right.goto next_command
+    if t : move right.goto next_command
+    if w : move right.goto next_command
+    if - : move right.goto next_command
+    if 0 : move right.goto next_command
+    if 1 : move right.goto next_command
+
+# STATE: SET VIRTUAL TAPEHEAD
+state set_virtual_tapehead
+    if 0 : write 0'.move left.goto rewind
+    if 1 : write 1'.move left.goto rewind
+
+# STATE: CLEAR FOR OUTPUT
+state clear_for_output
+
+    if -' : write _.move left.goto clear_for_output_scan_mode
+    if 0' : write 0.move left.goto clear_for_output_scan_mode
+    if 1' : write 1.move left.goto clear_for_output_scan_mode
+
+    # standard scan right
+    if % : move right.goto clear_for_output
+    if * : move right.goto clear_for_output
+    if d : move right.goto clear_for_output
+    if m : move right.goto clear_for_output
+    if o : move right.goto clear_for_output
+    if v : move right.goto clear_for_output
+    if e : move right.goto clear_for_output
+    if r : move right.goto clear_for_output
+    if i : move right.goto clear_for_output
+    if g : move right.goto clear_for_output
+    if h : move right.goto clear_for_output
+    if t : move right.goto clear_for_output
+    if l : move right.goto clear_for_output
+    if e : move right.goto clear_for_output
+    if f : move right.goto clear_for_output
+    if t : move right.goto clear_for_output
+    if w : move right.goto clear_for_output
+    if - : move right.goto clear_for_output
+    if 0 : move right.goto clear_for_output
+    if 1 : move right.goto clear_for_output
+
+state clear_for_output_scan_mode
+    if * : write _.move left.goto clear_for_output_delete_mode
+
+    # standard scan left
+    if d  : move left.goto clear_for_output_scan_mode
+    if .  : move left.goto clear_for_output_scan_mode
+    if %  : move left.goto clear_for_output_scan_mode
+    if m  : move left.goto clear_for_output_scan_mode
+    if m' : move left.goto clear_for_output_scan_mode
+    if o  : move left.goto clear_for_output_scan_mode
+    if v  : move left.goto clear_for_output_scan_mode
+    if e  : move left.goto clear_for_output_scan_mode
+    if r  : move left.goto clear_for_output_scan_mode
+    if r' : move left.goto clear_for_output_scan_mode
+    if i  : move left.goto clear_for_output_scan_mode
+    if g  : move left.goto clear_for_output_scan_mode
+    if h  : move left.goto clear_for_output_scan_mode
+    if t  : move left.goto clear_for_output_scan_mode
+    if l' : move left.goto clear_for_output_scan_mode
+    if e  : move left.goto clear_for_output_scan_mode
+    if f  : move left.goto clear_for_output_scan_mode
+    if t  : move left.goto clear_for_output_scan_mode
+    if w  : move left.goto clear_for_output_scan_mode
+    if w' : move left.goto clear_for_output_scan_mode
+    if -  : move left.goto clear_for_output_scan_mode
+    if -' : move left.goto clear_for_output_scan_mode
+    if 0  : move left.goto clear_for_output_scan_mode
+    if 0' : move left.goto clear_for_output_scan_mode
+    if 1  : move left.goto clear_for_output_scan_mode
+    if 1' : move left.goto clear_for_output_scan_mode
+
+state clear_for_output_delete_mode
+    if _ : goto halt
+
+    # Delete all characters!
+    if d : write _.move left.goto clear_for_output_delete_mode
+    if . : write _.move left.goto clear_for_output_delete_mode
+    if % : write _.move left.goto clear_for_output_delete_mode
+    if m : write _.move left.goto clear_for_output_delete_mode
+    if m' : write _.move left.goto clear_for_output_delete_mode
+    if o : write _.move left.goto clear_for_output_delete_mode
+    if v : write _.move left.goto clear_for_output_delete_mode
+    if e : write _.move left.goto clear_for_output_delete_mode
+    if r : write _.move left.goto clear_for_output_delete_mode
+    if r' : write _.move left.goto clear_for_output_delete_mode
+    if i : write _.move left.goto clear_for_output_delete_mode
+    if g : write _.move left.goto clear_for_output_delete_mode
+    if h : write _.move left.goto clear_for_output_delete_mode
+    if t : write _.move left.goto clear_for_output_delete_mode
+    if l' : write _.move left.goto clear_for_output_delete_mode
+    if e : write _.move left.goto clear_for_output_delete_mode
+    if f : write _.move left.goto clear_for_output_delete_mode
+    if t : write _.move left.goto clear_for_output_delete_mode
+    if w : write _.move left.goto clear_for_output_delete_mode
+    if w' : write _.move left.goto clear_for_output_delete_mode
+    if - : write _.move left.goto clear_for_output_delete_mode
+    if -' : write _.move left.goto clear_for_output_delete_mode
+    if 0 : write _.move left.goto clear_for_output_delete_mode
+    if 0' : write _.move left.goto clear_for_output_delete_mode
+    if 1 : write _.move left.goto clear_for_output_delete_mode
+    if 1' : write _.move left.goto clear_for_output_delete_mode
+
+####################################
+# These next few are moving states
+####################################
+state virt_move 
+    if r : write r'.move right.goto virt_move_right
+
+state virt_move_right
+    if 0' : write 0.move right.goto set_virtual_tapehead
+    if 1' : write 1.move right.goto set_virtual_tapehead
+
+    # standard scan right
+    if . : move right.goto virt_move_right
+    if m : move right.goto virt_move_right
+    if o : move right.goto virt_move_right
+    if v : move right.goto virt_move_right
+    if e : move right.goto virt_move_right
+    if % : move right.goto virt_move_right
+    if * : move right.goto virt_move_right
+    if r : move right.goto virt_move_right
+    if i : move right.goto virt_move_right
+    if g : move right.goto virt_move_right
+    if h : move right.goto virt_move_right
+    if t : move right.goto virt_move_right
+    if l : move right.goto virt_move_right
+    if e : move right.goto virt_move_right
+    if f : move right.goto virt_move_right
+    if t : move right.goto virt_move_right
+    if w : move right.goto virt_move_right
+    if - : move right.goto virt_move_right
+    if 0 : move right.goto virt_move_right
+    if 1 : move right.goto virt_move_right
+
+# STATE: VIRTUAL MOVE LEFT (BONUS PROBLEM)
+# This one is a bonus problem! Part of the difficulty here is shifting the entire virtual tape to the 
+# right when the tape head tries to reach left over the *. Partial marks will be given for simulating 
+# a one-way tape instead of a two-way tape, where this issue doesn't arise.
+
+state virt_move_left
+    # todo: code here (Bonus)
+
+
+####################################
+# These next few are writing states
+####################################
+
+# Pseudocode: 
+    # Step 1. determine which of 0, 1, _ that will be written to the virtual tape
+    # Step 2. Move to the virtual tape head (idicated with a ' somewhere after the *)
+    # Step 3. Write the symbol to the virtual tape head (with a ', the virtual tape head has not moved)
+    # Step 4. Rewind
+
+# STATE: VIRTUAL WRITE
+state virt_write
+    # Step 1
+    # todo: code here
+
+# STATE: WRITE A BLANK TO THE VIRTUAL TAPE
+state virt_write_blank
+    # Steps 2 and 3 and 4
+
+# STATE: WRITE A 0 TO THE VIRTUAL TAPE
+state virt_write_0 
+    # Steps 2 and 3 and 4
+    
+
+# STATE: WRITE A 1 TO THE VIRTUAL TAPE
+state virt_write_1
+    # Steps 2 and 3 and 4
+    
