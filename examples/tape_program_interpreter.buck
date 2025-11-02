@@ -255,7 +255,6 @@ state virt_move_right
 # This one is a bonus problem! Part of the difficulty here is shifting the entire virtual tape to the 
 # right when the tape head tries to reach left over the *. Partial marks will be given for simulating 
 # a one-way tape instead of a two-way tape, where this issue doesn't arise.
-
 state virt_move_left
     # todo: code here (Bonus)
 
