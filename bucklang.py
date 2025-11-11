@@ -26,6 +26,7 @@ def interactive_mode() :
 
     interactive_machine = TuringMachine(input_string=user_inp)
     tape = interactive_machine.tape
+    interactive_machine.states[TuringMachine.TOPSTATE] = 1
     usr_command = ""
 
     while not ("quit" in user_inp or "quit" in usr_command):
@@ -60,6 +61,8 @@ def interactive_mode() :
                         tape.move_right(multiple=int(multiple))
         except :
             print("\nInvalid command.\n")
+    
+    return tape
 
 def main(input_file = "", input_word = "", debugging = False) :
     """
@@ -116,7 +119,9 @@ def main(input_file = "", input_word = "", debugging = False) :
         result = automatic_machine.run(outputfile=outputfilename)
         output_string = automatic_machine.output()
         # print(f"End tape:\n{result}")
-        print("Output:", output_string, "\n")
+        print("Output:", output_string, "\nTime:", automatic_machine.get_clock())
+
+        return input_word, output_string, automatic_machine.get_clock()
 
 
     except :

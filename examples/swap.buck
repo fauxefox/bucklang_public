@@ -1,0 +1,11 @@
+state read
+if 0 : move right.goto read_0
+if 1 : move right.goto read_1
+
+state read_0 
+if 0 : move right.goto read
+if 1 : move left.write 1.move right.write 0.move right.goto read
+
+state read_1
+if 0 : move left.write 0.move right.write 1.move right.goto read
+if 1 : move right.goto read

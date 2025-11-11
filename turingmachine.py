@@ -28,6 +28,8 @@ class TuringMachine :
         self.tape = Tape()
         self._tracking = tracked
 
+        self._clocktime = 0
+
         # Initialize the tape with the input string
         for c in input_string :
             self.tape.write_value(c)
@@ -41,7 +43,7 @@ class TuringMachine :
         # In this encoding of a Turing machine, states are the same as "line numbers".
         # This creates a dictionary of what line numbers the states are at. We also 
         # use the state name __top to move the program to the first line.
-        self.states = {TuringMachine.TOPSTATE : -1}
+        self.states = {TuringMachine.TOPSTATE : 0}
         for line_index in range(len(program)) :
             line = program[line_index]
             if (
@@ -52,7 +54,7 @@ class TuringMachine :
                 self.states[statename] = line_index
 
         # Make sure they set a top state!
-        assert self.states[TuringMachine.TOPSTATE] > -1
+        # assert self.states[TuringMachine.TOPSTATE] > -1
 
         # Records the current state of the program
         self.current_state = TuringMachine.TOPSTATE
@@ -64,6 +66,9 @@ class TuringMachine :
         """
         Runs a single line of the program.
         """
+
+        # increase time
+        self._clocktime += 1
         
         # If the code_tokens are a list, then they must be the keyword state and a state name
         if type(code_tokens) == list :
@@ -186,10 +191,11 @@ class TuringMachine :
             result = self.run_command(code_tokens=code_tokens, outputfile=outputfile)
 
             if result == "eop" :
-                return str(self)
+                break
+        
 
-        return str(self)
-
+    def get_clock(self) :
+        return self._clocktime
 
     def __str__(self):
         return str(self.tape)
