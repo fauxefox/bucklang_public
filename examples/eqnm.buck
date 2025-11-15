@@ -1,3 +1,8 @@
+# eqnm is a BuckLang program that defines a decision procedure for the language 
+#   L = { 0^n 1^n | n a natural number }
+# It works is by deleting a 0 from the front of the string and then attempting 
+# to delete a 1 from the back, until it runs out of 0s and 1s.
+
 state __top
     if _ : goto accept_rew
     if 0 : erase.move right.goto read_0_forw
