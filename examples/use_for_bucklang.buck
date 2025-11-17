@@ -1,0 +1,13 @@
+# second one
+state x_clr
+if _ : move right.goto y
+if 0 : move left.goto x_clr
+if 1 : move left.goto x_clr
+
+state y
+if _ : move left.goto x_hlt
+if 0 : erase.move right.goto y
+if 1 : erase.move right.goto y
+
+# First one
+state x_hlt
