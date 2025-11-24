@@ -1,0 +1,39 @@
+state __top 
+if _ : halt
+if a : goto lett_a 
+if b : goto lett_b 
+if c : goto rej
+
+state lett_a
+if _ : goto rej
+if a : write 0.move right.goto lett_a
+if b : write 0.move right.goto lett_b
+if c : goto rej
+
+state lett_b 
+if _ : goto rej
+if a : goto rej
+if b : write 0.move right.goto lett_b
+if c : write 1.move right.goto lett_c
+
+state lett_c 
+if _ : halt
+if a : goto rej
+if b : goto rej
+if c : write 1.move right.goto lett_c
+
+state rej
+if _ : move right.goto rej_ers
+if 0 : move left.goto rej
+if 1 : move left.goto rej
+if a : move left.goto rej
+if b : move left.goto rej
+if c : move left.goto rej
+
+state rej_ers
+if _ : write 1.move right.write 0.halt
+if 0 : erase.move right.goto rej_ers
+if 1 : erase.move right.goto rej_ers
+if a : erase.move right.goto rej_ers
+if b : erase.move right.goto rej_ers
+if c : erase.move right.goto rej_ers
