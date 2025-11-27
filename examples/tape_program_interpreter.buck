@@ -6,7 +6,7 @@
 # and runs the tape program on the string,
 # treated as a "virtual tape". To see how
 # it behaves, try running 
-#   python3 bucklang.py "solutions/tape_program_interpreter.buck" "move%right*001"
+#   python3 bucklang.py "examples/tape_program_interpreter.buck" "move%right*001"
 # For a more sophisticated program, you can try "write%0.move%right.write%0.move%right.write%0*111"
 # ----
 
