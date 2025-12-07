@@ -140,7 +140,7 @@ if __name__ == "__main__" :
     system_arguments = sys.argv
 
     # Clear screen
-    print("\n"*100)
+    print("\n")
     
     # Run main program
     try :

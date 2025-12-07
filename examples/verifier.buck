@@ -1,0 +1,15 @@
+state v
+    if _ : write 1.goto v
+    if 1 : move right.goto z
+    if 0 : move right.goto u
+    # if 0 : move right.goto z
+
+state u 
+    if _ : write 1.halt
+    if 0 : erase.move right
+    if 1 : erase.move right.goto u
+
+state z : 
+    if _ : halt 
+    if 0 : erase.move right.goto z 
+    if 1 : erase.move right.goto z

@@ -28,14 +28,14 @@ class TuringMachine :
         self.tape = Tape()
         self._tracking = tracked
 
-        self._clocktime = 0
-
         # Initialize the tape with the input string
         for c in input_string :
             self.tape.write_value(c)
             self.tape.move_right()
 
         self.tape.move_left(multiple=len(input_string))
+
+        self._clocktime = 0
 
         # Set up the program
         self.program = program
@@ -67,9 +67,6 @@ class TuringMachine :
         Runs a single line of the program.
         """
 
-        # increase time
-        self._clocktime += 1
-        
         # If the code_tokens are a list, then they must be the keyword state and a state name
         if type(code_tokens) == list :
             statename = code_tokens[1]
@@ -121,7 +118,8 @@ class TuringMachine :
                                 str(reading),
                                 str(command), 
                                 str(argument), 
-                                str(aux_argument)
+                                str(aux_argument),
+                                str(self._clocktime)
                             ]
                             )
                         )
@@ -129,6 +127,8 @@ class TuringMachine :
 
                     # Now go through the possible commands one at a time
                     if command == TuringMachine.MOVE and argument[0] == "l" :
+                        # increase time
+                        self._clocktime += 1
 
                         if aux_argument != None :
                             # Here, move got a "multiples" argument
@@ -137,7 +137,9 @@ class TuringMachine :
                             self.tape.move_left()
 
                     elif command == TuringMachine.MOVE and argument[0] == "r" :
-                        
+                        # increase time
+                        self._clocktime += 1
+
                         if aux_argument != None :
                             # Here, move got a "multiples" argument
                             self.tape.move_right(multiple=aux_argument)
@@ -145,9 +147,15 @@ class TuringMachine :
                             self.tape.move_right()
 
                     elif command == TuringMachine.WRITE :
+                        # increase time
+                        self._clocktime += 1
+
                         self.tape.write_value(str(argument))
 
                     elif command == TuringMachine.ERASE :
+                        # increase time
+                        self._clocktime += 1
+
                         self.tape.write_value(Tape.BLANK)
 
                     elif command == TuringMachine.GOTO and argument in self.states.keys() :
